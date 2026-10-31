@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Management | MediCare Hospital</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #243247;
+        }
+
+        header {
+            background: #087f8c;
+            color: white;
+            padding: 24px 40px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        nav {
+            background: white;
+            padding: 18px 40px;
+            box-shadow: 0 2px 8px #00000010;
+        }
+
+        nav a {
+            color: #087f8c;
+            text-decoration: none;
+            margin-right: 25px;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px #0000000c;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #087f8c;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccd5df;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 12px;
+            background: #087f8c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #066873;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 450px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        th {
+            background: #e8f5f6;
+            color: #087f8c;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+        }
+
+        .success {
+            background: #d9f7e5;
+            color: #176b3a;
+        }
+
+        .error {
+            background: #ffe3e3;
+            color: #a11b1b;
+        }
+
+        .empty {
+            color: #68778a;
+        }
+
+        @media (max-width: 800px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            header, nav {
+                padding: 20px;
+            }
+
+            nav a {
+                display: inline-block;
+                margin: 5px 12px 5px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🏥 MediCare Hospital</h1>
+        <p>Doctor Management</p>
+    </header>
+
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/patients">Patients</a>
+        <a href="/doctors">Doctors</a>
+        <a href="/appointments">Appointments</a>
+    </nav>
+
+    <main>
+        <h2>Doctor Management</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <div class="container">
+
+            <section class="panel">
+                <h2>Add Doctor</h2>
+
+                <form method="POST" action="/doctors">
+
+                    <label for="name">Doctor Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        maxlength="100"
+                        placeholder="Enter doctor name"
+                        required
+                    >
+
+                    <label for="specialization">Specialization</label>
+
+                    <select id="specialization"
+                            name="specialization" required>
+                        <option value="">Select Specialization</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="General Medicine">General Medicine</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Ophthalmology">Ophthalmology</option>
+                        <option value="Physiotherapy">Physiotherapy</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <label for="phone">Phone Number</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        pattern="[0-9]{10}"
+                        minlength="10"
+                        maxlength="10"
+                        inputmode="numeric"
+                        placeholder="Enter 10-digit number"
+                        required
+                    >
+
+                    <button type="submit">Add Doctor</button>
+
+                </form>
+            </section>
+
+            <section class="panel">
+                <h2>Registered Doctors</h2>
+
+                {% if doctors %}
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Specialization</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for doctor in doctors %}
+                                    <tr>
+                                        <td>{{ doctor['id'] }}</td>
+                                        <td>{{ doctor['name'] }}</td>
+                                        <td>{{ doctor['specialization'] }}</td>
+                                        <td>{{ doctor['phone'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="empty">
+                        No doctors registered yet. Add your first doctor.
+                    </p>
+                {% endif %}
+
+            </section>
+
+        </div>
+    </main>
+
+</body>
+</html>

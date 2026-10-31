@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Appointment Booking | MediCare Hospital</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #243247;
+        }
+
+        header {
+            background: #087f8c;
+            color: white;
+            padding: 24px 40px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        nav {
+            background: white;
+            padding: 18px 40px;
+            box-shadow: 0 2px 8px #00000010;
+        }
+
+        nav a {
+            color: #087f8c;
+            text-decoration: none;
+            margin-right: 25px;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px #0000000c;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #087f8c;
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd5df;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        button {
+            padding: 13px 20px;
+            background: #087f8c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #066873;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+        }
+
+        .success {
+            background: #d9f7e5;
+            color: #176b3a;
+        }
+
+        .error {
+            background: #ffe3e3;
+            color: #a11b1b;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        th {
+            background: #e8f5f6;
+            color: #087f8c;
+        }
+
+        .empty {
+            color: #68778a;
+        }
+
+        @media (max-width: 650px) {
+            header, nav {
+                padding: 20px;
+            }
+
+            nav a {
+                display: inline-block;
+                margin: 5px 12px 5px 0;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🏥 MediCare Hospital</h1>
+        <p>Appointment Booking System</p>
+    </header>
+
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/patients">Patients</a>
+        <a href="/doctors">Doctors</a>
+        <a href="/appointments">Appointments</a>
+    </nav>
+
+    <main>
+        <h2>Appointment Management</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <section class="panel">
+            <h2>Book an Appointment</h2>
+
+            {% if patients and doctors %}
+
+                <form method="POST" action="/appointments">
+
+                    <div class="form-grid">
+
+                        <div>
+                            <label for="patient_name">Select Patient</label>
+
+                            <select id="patient_name"
+                                    name="patient_name" required>
+                                <option value="">Choose a patient</option>
+
+                                {% for patient in patients %}
+                                    <option value="{{ patient['name'] }}">
+                                        {{ patient['name'] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="doctor_name">Select Doctor</label>
+
+                            <select id="doctor_name"
+                                    name="doctor_name" required>
+                                <option value="">Choose a doctor</option>
+
+                                {% for doctor in doctors %}
+                                    <option value="{{ doctor['name'] }}">
+                                        {{ doctor['name'] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="appointment_date">
+                                Appointment Date
+                            </label>
+
+                            <input type="date"
+                                   id="appointment_date"
+                                   name="appointment_date"
+                                   required>
+                        </div>
+
+                        <div>
+                            <label for="reason">Consultation Reason</label>
+
+                            <input type="text"
+                                   id="reason"
+                                   name="reason"
+                                   maxlength="250"
+                                   placeholder="Enter reason for visit"
+                                   required>
+                        </div>
+
+                        <div class="full-width">
+                            <button type="submit">
+                                Book Appointment
+                            </button>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            {% else %}
+
+                <p class="empty">
+                    Please register at least one patient and one doctor
+                    before booking an appointment.
+                </p>
+
+                <p>
+                    <a href="/patients">Register Patient</a>
+                    &nbsp; | &nbsp;
+                    <a href="/doctors">Add Doctor</a>
+                </p>
+
+            {% endif %}
+        </section>
+
+        <section class="panel">
+            <h2>Appointment Records</h2>
+
+            {% if appointments %}
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for appointment in appointments %}
+                                <tr>
+                                    <td>{{ appointment['id'] }}</td>
+                                    <td>{{ appointment['patient_name'] }}</td>
+                                    <td>{{ appointment['doctor_name'] }}</td>
+                                    <td>{{ appointment['appointment_date'] }}</td>
+                                    <td>{{ appointment['reason'] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            {% else %}
+
+                <p class="empty">
+                    No appointments booked yet.
+                </p>
+
+            {% endif %}
+        </section>
+
+    </main>
+
+</body>
+</html>
