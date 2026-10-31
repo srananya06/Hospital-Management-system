@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #243247;
+        }
+
+        header {
+            background: #087f8c;
+            color: white;
+            padding: 24px 40px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header p {
+            margin: 0;
+        }
+
+        nav {
+            background: white;
+            padding: 18px 40px;
+            box-shadow: 0 2px 8px #00000010;
+        }
+
+        nav a {
+            color: #087f8c;
+            text-decoration: none;
+            margin-right: 25px;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 35px 40px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 22px;
+            margin-top: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px #0000000c;
+            border-left: 5px solid #087f8c;
+        }
+
+        .card h3 {
+            color: #637083;
+            margin-top: 0;
+        }
+
+        .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #087f8c;
+        }
+
+        .welcome {
+            background: white;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 600px) {
+            header, main {
+                padding: 24px 18px;
+            }
+
+            nav {
+                padding: 18px;
+            }
+
+            nav a {
+                display: inline-block;
+                margin: 6px 12px 6px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🏥 MediCare Hospital</h1>
+        <p>Hospital Management System</p>
+    </header>
+
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/patients">Patients</a>
+        <a href="/doctors">Doctors</a>
+        <a href="/appointments">Appointments</a>
+    </nav>
+
+    <main>
+        <h2>Dashboard</h2>
+        <p>Welcome to the hospital administration dashboard.</p>
+
+        <section class="cards">
+            <div class="card">
+                <h3>Total Patients</h3>
+                <div class="number">{{ patients }}</div>
+            </div>
+
+            <div class="card">
+                <h3>Total Doctors</h3>
+                <div class="number">{{ doctors }}</div>
+            </div>
+
+            <div class="card">
+                <h3>Total Appointments</h3>
+                <div class="number">{{ appointments }}</div>
+            </div>
+        </section>
+
+        <section class="welcome">
+            <h2>Hospital Overview</h2>
+            <p>
+                Manage patient registrations, doctor information,
+                and appointments from one place.
+            </p>
+            <p>
+                Select a module from the navigation menu to get started.
+            </p>
+        </section>
+    </main>
+
+</body>
+</html>
